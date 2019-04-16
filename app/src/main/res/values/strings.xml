@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">SungStarBook</string>
+
+    <string name="google_login_client_id">766797816298-r3rvcmd2bkgma2v32kn02cm88hbprbm7.apps.googleusercontent.com
+    </string>
+
+    <string name="naver_login_client_id">4BbxMvXHYrTNLUk02lDH</string>
+    <string name="naver_login_client_secret">s6eKAmaXhA</string>
+    <string name="naver_login_client_name">SungStarBook</string>
+
+    <string name="kakao_login_native_key">10889b96a72fcab9e3b624b56bc0f3c1</string>
+
+    <string name="facebook_login_id_key">2080675788667593</string>
+    <string name="facebook_login_protocol_scheme">fb2080675788667593</string>
+
+    <string name="copyright">© 2019 SungBin. all rights reserved.</string>
+
+    <string name="InputIdHint">Input ID…</string>
+    <string name="InputPwHint">Input PW…</string>
+    <string name="select_login_way">로그인 방법 선택…</string>
+    <string name="title_activity_information_setting">프로필 사진/닉네임 설정</string>
+    <string name="input_use_nickname">닉네임 입력</string>
+</resources>

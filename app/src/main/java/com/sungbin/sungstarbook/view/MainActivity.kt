@@ -9,21 +9,18 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import androidx.annotation.Nullable
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.text.InputFilter
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.animation.AlphaAnimation
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import androidx.annotation.Nullable
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.facebook.*
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginManager
@@ -34,6 +31,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.kakao.auth.ErrorCode
@@ -88,20 +88,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         /* ----- Firebase Auth ----- */
         mAuth = FirebaseAuth.getInstance()
         mAuth!!.setLanguageCode("kr")
-        /* ---------- */
-
-        /* ----- 익명 로그인 -----*/
-        /*mAuth!!.signInAnonymously()
-            .addOnCompleteListener(this) {
-                if (it.isSuccessful) {
-                    Utils.toast(applicationContext,
-                        "익명 로그인에 성공했습니다.",
-                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
-                } else {
-                   Utils.error(applicationContext,
-                       "익명 로그인 과정에서 오류가 발생했습니다.\n${it.exception}")
-                }
-            }*/
         /* ---------- */
 
         /* ----- 네이버 로그인 ----- */
@@ -186,7 +172,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         }
 
         more_login.setOnClickListener {
-            val bottomSheetDialog = BottomSheetDialog(this, snsLoginCallBack)
+            val bottomSheetDialog = BottomSheetDialog(this, snsLoginCallBack, mAuth!!)
             bottomSheetDialog.show(supportFragmentManager, "More Login")
         }
         /* ---------- */
@@ -407,7 +393,10 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     }
 
     @SuppressLint("ValidFragment")
-    class BottomSheetDialog @SuppressLint("ValidFragment") constructor(private var act: Activity, private var callBack: PhoneAuthProvider.OnVerificationStateChangedCallbacks) : BottomSheetDialogFragment(), View.OnClickListener {
+    class BottomSheetDialog @SuppressLint("ValidFragment")
+        constructor(private var act: Activity,
+                    private var callBack: PhoneAuthProvider.OnVerificationStateChangedCallbacks,
+                    private var mAuth: FirebaseAuth): BottomSheetDialogFragment(), View.OnClickListener {
 
         private var guest: MaterialButton? = null
         private var facebook: MaterialButton? = null
@@ -440,7 +429,64 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         override fun onClick(view: View) {
             when (view.id) {
                 R.id.facebook_login -> facebook_origin!!.performClick()
-                R.id.guest_login -> Utils.toast(context!!, "준비중", FancyToast.LENGTH_SHORT, FancyToast.INFO)
+                R.id.guest_login -> {
+                    val dialog = AlertDialog.Builder(context!!)
+                    dialog.setTitle("이메일/비밀번호 입력")
+
+                    val params = FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    params.leftMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+                    params.rightMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+
+                    val params2 = FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    params2.leftMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+                    params2.rightMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+                    params2.topMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+
+                    val layout = LinearLayout(context!!)
+                    layout.isFocusableInTouchMode = true
+                    layout.orientation = LinearLayout.VERTICAL
+
+                    val textInputLayout = TextInputLayout(context!!)
+                    textInputLayout.isCounterEnabled = true
+                    textInputLayout.layoutParams = params2
+
+                    val textInputEditText = TextInputEditText(context!!)
+                    textInputEditText.hint = "이메일을 입력해 주세요..."
+                    textInputEditText.inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                    textInputLayout.addView(textInputEditText)
+                    layout.addView(textInputLayout)
+
+                    val textInputLayout2 = TextInputLayout(context!!)
+                    textInputLayout2.layoutParams = params
+                    textInputLayout2.isCounterEnabled = true
+
+                    val textInputEditText2 = TextInputEditText(context!!)
+                    textInputEditText2.hint = "비밀번호를 입력해 주세요..."
+                    textInputEditText2.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    textInputLayout2.addView(textInputEditText2)
+                    layout.addView(textInputLayout2)
+
+                    dialog.setView(layout)
+                    dialog.setPositiveButton("확인") { _, _ ->
+                        FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+                            textInputEditText.text.toString(), textInputEditText2.text.toString())
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Utils.toast(act,
+                                        "게스트 회원가입에 성공했습니다.",
+                                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
+                                } else {
+                                    Utils.error(act,
+                                        "게스트 회원가입에 실패했습니다.\n${task.exception}")
+                                }
+                            }
+                    }
+                    val alert = dialog.create()
+                    alert.window!!.setBackgroundDrawableResource(R.drawable.dialog_round)
+                    alert.show()
+                }
                 R.id.sns_login -> {
                     val dialog = AlertDialog.Builder(context!!)
                     dialog.setTitle("전화번호 입력")
@@ -450,6 +496,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
                     val textInputEditText = TextInputEditText(context!!)
                     textInputEditText.inputType = InputType.TYPE_CLASS_NUMBER
+                    textInputEditText.hint = "전화번호를 입력해 주세요..."
                     textInputEditText.filters = arrayOf(InputFilter.LengthFilter(11))
                     textInputLayout.addView(textInputEditText)
 
@@ -459,6 +506,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
                     params.leftMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
                     params.rightMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+                    params.topMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
 
                     textInputLayout.layoutParams = params
                     container.addView(textInputLayout)
@@ -479,7 +527,20 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                     }
                     dialog.show()
                 }
-                R.id.no_name_login -> Utils.toast(context!!, "준비중", FancyToast.LENGTH_SHORT, FancyToast.INFO)
+                R.id.no_name_login -> {
+                    mAuth.signInAnonymously()
+                        .addOnCompleteListener(act) {
+                            if (it.isSuccessful) {
+                                Utils.toast(act,
+                                    "익명 로그인에 성공했습니다.",
+                                    FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
+                                startActivity(Intent(act, InformationSetting::class.java))
+                            } else {
+                                Utils.error(act,
+                                    "익명 로그인 과정에서 오류가 발생했습니다.\n${it.exception}")
+                            }
+                        }
+                }
             }
             dismiss()
         }
