@@ -1,36 +1,36 @@
 package com.sungbin.sungstarbook.utils
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
+import com.shashank.sony.fancytoastlib.FancyToast
+import com.sungbin.sungstarbook.view.MainActivity
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStreamReader
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context.MODE_PRIVATE
-import android.app.AlarmManager
-import android.app.PendingIntent
-import com.sungbin.sungstarbook.view.MainActivity
-import android.content.Intent
-import com.shashank.sony.fancytoastlib.FancyToast
 
 
-object Utils{
+object Utils {
 
     var sdcard = Environment.getExternalStorageDirectory().absolutePath
 
-    fun createFolder(name:String){
+    fun createFolder(name: String) {
         File("$sdcard/SungStarBook/$name/").mkdirs()
     }
 
-    fun toast(ctx: Context?, content:String){
+    fun toast(ctx: Context?, content: String) {
         Toast.makeText(ctx, content, Toast.LENGTH_SHORT).show()
     }
 
-    fun read(name:String, _null:String): String{
+    fun read(name: String, _null: String): String {
         try {
             val file = File("$sdcard/SungStarBook/$name/")
             if (!file.exists()) return _null
@@ -39,7 +39,7 @@ object Utils{
             val br = BufferedReader(isr)
             var str = br.readLine()
 
-            while(true) {
+            while (true) {
                 val inputLine = br.readLine() ?: break
                 str += "\n" + inputLine
             }
@@ -47,15 +47,14 @@ object Utils{
             isr.close()
             br.close()
             return str.toString()
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             Log.e("READ", e.toString())
         }
 
         return _null
     }
 
-    fun save(name:String, content:String){
+    fun save(name: String, content: String) {
         try {
             val file = File("$sdcard/SungStarBook/$name")
             val fos = java.io.FileOutputStream(file)
@@ -67,7 +66,7 @@ object Utils{
 
     }
 
-    fun delete(name:String){
+    fun delete(name: String) {
         File("$sdcard/SungStarBook/$name").delete()
     }
 

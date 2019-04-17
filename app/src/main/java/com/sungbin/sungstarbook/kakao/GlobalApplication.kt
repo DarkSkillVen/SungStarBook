@@ -4,9 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import com.kakao.auth.KakaoSDK
-import com.sungbin.sungstarbook.GlobalApplication.Companion.currentActivity
-import com.sungbin.sungstarbook.GlobalApplication.Companion.obj
-
 import com.sungbin.sungstarbook.kakao.KakaoSDKAdapter
 
 
@@ -21,10 +18,10 @@ class GlobalApplication : Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         @Volatile
-        private var obj:GlobalApplication? = null
+        private var obj: GlobalApplication? = null
         @SuppressLint("StaticFieldLeak")
         @Volatile
-        private var currentActivity:Activity? = null
+        private var currentActivity: Activity? = null
 
         fun getGlobalApplicationContext(): GlobalApplication? {
             return obj

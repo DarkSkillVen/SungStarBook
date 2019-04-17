@@ -16,6 +16,8 @@
        public protected *;
 }
 
+-keep class androidx.appcompat.widget.** { *; }
+
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable

@@ -68,9 +68,11 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     object : OAuthLoginHandler() {
         override fun run(success: Boolean) {
             if (success) {
-                Utils.toast(applicationContext,
+                Utils.toast(
+                    applicationContext,
                     "네이버 로그인 성공",
-                    FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
+                    FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
+                )
             } else {
                 val errorCode = mOAuthLoginModule!!.getLastErrorCode(applicationContext).code
                 Utils.error(applicationContext, "네이버 로그인 실패\n에러 코드 : $errorCode")
@@ -133,7 +135,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
             override fun onCodeSent(
                 verificationId: String?,
-                token: PhoneAuthProvider.ForceResendingToken) {
+                token: PhoneAuthProvider.ForceResendingToken
+            ) {
                 showNumberCheckDialog(verificationId!!)
             }
         }
@@ -150,8 +153,10 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                 }
 
                 override fun onError(e: FacebookException) {
-                    Utils.error(applicationContext,
-                        "페이스북 로그인에서 오류가 발생했습니다.\n$e")
+                    Utils.error(
+                        applicationContext,
+                        "페이스북 로그인에서 오류가 발생했습니다.\n$e"
+                    )
                 }
             })
         /* ---------- */
@@ -177,7 +182,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         }
         /* ---------- */
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             with(window) {
                 decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                 statusBarColor = Color.WHITE
@@ -225,17 +230,17 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) { //Google Login
-           val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+            val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
             if (result.isSuccess) {
                 val account = result.signInAccount
                 firebaseAuthWithGoogle(account!!)
+            } else {
+                Utils.error(
+                    applicationContext,
+                    "구글 로그인을 하는 중에 오류가 발생했습니다."
+                )
             }
-            else {
-                Utils.error(applicationContext,
-                    "구글 로그인을 하는 중에 오류가 발생했습니다.")
-            }
-        }
-        else //전화번호 인증
+        } else //전화번호 인증
             snsLoginCallBackManager.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -244,12 +249,16 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         mAuth!!.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Utils.toast(applicationContext,
+                    Utils.toast(
+                        applicationContext,
                         "구글 로그인 Firebase Auth 처리에 성공했습니다.",
-                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
+                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
+                    )
                 } else {
-                    Utils.error(applicationContext,
-                        "구글 로그인 Firebase Auth 처리에 실패했습니다.\n${task.exception}")
+                    Utils.error(
+                        applicationContext,
+                        "구글 로그인 Firebase Auth 처리에 실패했습니다.\n${task.exception}"
+                    )
                 }
             }
     }
@@ -258,7 +267,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
     }
 
-    private fun showNumberCheckDialog(verificationId: String){
+    private fun showNumberCheckDialog(verificationId: String) {
         val dialog = AlertDialog.Builder(this)
         dialog.setTitle("인증번호 입력")
 
@@ -272,7 +281,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         val container = FrameLayout(this)
         val params = FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        )
 
         params.leftMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
         params.rightMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
@@ -286,13 +296,16 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             mAuth!!.signInWithCredential(credential)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        Utils.toast(this,
+                        Utils.toast(
+                            this,
                             "인증번호를 통한 로그인에 성공했습니다.",
-                            FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
-                    }
-                    else {
-                        Utils.error(this,
-                            "인증번호를 통한 로그인에 실패했습니다.\n${task.exception}")
+                            FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
+                        )
+                    } else {
+                        Utils.error(
+                            this,
+                            "인증번호를 통한 로그인에 실패했습니다.\n${task.exception}"
+                        )
                     }
                 }
         }
@@ -305,13 +318,16 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         mAuth!!.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Utils.toast(applicationContext,
+                    Utils.toast(
+                        applicationContext,
                         "페이스북 로그인 Firebase Auth 처리에 성공했습니다.",
-                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
-                }
-                else {
-                    Utils.error(applicationContext,
-                        "페이스북 로그인 Firebase Auth 처리에 실패했습니다.\n${task.exception}")
+                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
+                    )
+                } else {
+                    Utils.error(
+                        applicationContext,
+                        "페이스북 로그인 Firebase Auth 처리에 실패했습니다.\n${task.exception}"
+                    )
                 }
             }
     }
@@ -320,13 +336,16 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         mAuth!!.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Utils.toast(applicationContext,
+                    Utils.toast(
+                        applicationContext,
                         "인증번호를 통한 로그인에 성공했습니다.",
-                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
-                }
-                else {
-                    Utils.error(applicationContext,
-                        "인증번호를 통한 로그인에 실패했습니다.\n${task.exception}")
+                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
+                    )
+                } else {
+                    Utils.error(
+                        applicationContext,
+                        "인증번호를 통한 로그인에 실패했습니다.\n${task.exception}"
+                    )
                 }
             }
     }
@@ -340,8 +359,10 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                 override fun onFailure(errorResult: ErrorResult?) {
                     val result = ErrorCode.valueOf(errorResult!!.errorCode)
                     if (result == ErrorCode.CLIENT_ERROR_CODE) {
-                        Utils.error(ctx,
-                            "카카오톡 로그인에 실패했습니다.\n${errorResult.errorMessage}")
+                        Utils.error(
+                            ctx,
+                            "카카오톡 로그인에 실패했습니다.\n${errorResult.errorMessage}"
+                        )
                     }
                 }
 
@@ -352,9 +373,11 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                 }
 
                 override fun onSuccess(userProfile: UserProfile) {
-                    Utils.toast(ctx,
+                    Utils.toast(
+                        ctx,
                         "카카오톡 로그인에 성공했습니다.",
-                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
+                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
+                    )
                 }
             })
 
@@ -368,12 +391,16 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, pw)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Utils.toast(applicationContext,
+                    Utils.toast(
+                        applicationContext,
                         "게스트 회원가입에 성공했습니다.",
-                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
+                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
+                    )
                 } else {
-                    Utils.error(applicationContext,
-                        "게스트 회원가입에 실패했습니다.\n${task.exception}")
+                    Utils.error(
+                        applicationContext,
+                        "게스트 회원가입에 실패했습니다.\n${task.exception}"
+                    )
                 }
             }
     }
@@ -382,21 +409,27 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, pw)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Utils.toast(applicationContext,
+                    Utils.toast(
+                        applicationContext,
                         "게스트 로그인에 성공했습니다.",
-                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
+                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
+                    )
                 } else {
-                    Utils.error(applicationContext,
-                        "게스트 로그인에 실패했습니다.\n${task.exception}")
+                    Utils.error(
+                        applicationContext,
+                        "게스트 로그인에 실패했습니다.\n${task.exception}"
+                    )
                 }
             }
     }
 
     @SuppressLint("ValidFragment")
     class BottomSheetDialog @SuppressLint("ValidFragment")
-        constructor(private var act: Activity,
-                    private var callBack: PhoneAuthProvider.OnVerificationStateChangedCallbacks,
-                    private var mAuth: FirebaseAuth): BottomSheetDialogFragment(), View.OnClickListener {
+    constructor(
+        private var act: Activity,
+        private var callBack: PhoneAuthProvider.OnVerificationStateChangedCallbacks,
+        private var mAuth: FirebaseAuth
+    ) : BottomSheetDialogFragment(), View.OnClickListener {
 
         private var guest: MaterialButton? = null
         private var facebook: MaterialButton? = null
@@ -434,12 +467,14 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                     dialog.setTitle("이메일/비밀번호 입력")
 
                     val params = FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
                     params.leftMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
                     params.rightMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
 
                     val params2 = FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
                     params2.leftMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
                     params2.rightMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
                     params2.topMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
@@ -471,15 +506,20 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                     dialog.setView(layout)
                     dialog.setPositiveButton("확인") { _, _ ->
                         FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                            textInputEditText.text.toString(), textInputEditText2.text.toString())
+                            textInputEditText.text.toString(), textInputEditText2.text.toString()
+                        )
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-                                    Utils.toast(act,
+                                    Utils.toast(
+                                        act,
                                         "게스트 회원가입에 성공했습니다.",
-                                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
+                                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
+                                    )
                                 } else {
-                                    Utils.error(act,
-                                        "게스트 회원가입에 실패했습니다.\n${task.exception}")
+                                    Utils.error(
+                                        act,
+                                        "게스트 회원가입에 실패했습니다.\n${task.exception}"
+                                    )
                                 }
                             }
                     }
@@ -502,7 +542,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
                     val container = FrameLayout(context!!)
                     val params = FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
 
                     params.leftMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
                     params.rightMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
@@ -519,11 +560,14 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                             60,
                             TimeUnit.SECONDS,
                             act,
-                            callBack)
-                        Utils.toast(act,
+                            callBack
+                        )
+                        Utils.toast(
+                            act,
                             "인증번호가 문자 메세지로 전송 되었습니다.\n잠시만 기다려 주세요.",
                             FancyToast.LENGTH_SHORT,
-                            FancyToast.SUCCESS)
+                            FancyToast.SUCCESS
+                        )
                     }
                     dialog.show()
                 }
@@ -531,13 +575,17 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                     mAuth.signInAnonymously()
                         .addOnCompleteListener(act) {
                             if (it.isSuccessful) {
-                                Utils.toast(act,
+                                Utils.toast(
+                                    act,
                                     "익명 로그인에 성공했습니다.",
-                                    FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
+                                    FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
+                                )
                                 startActivity(Intent(act, InformationSetting::class.java))
                             } else {
-                                Utils.error(act,
-                                    "익명 로그인 과정에서 오류가 발생했습니다.\n${it.exception}")
+                                Utils.error(
+                                    act,
+                                    "익명 로그인 과정에서 오류가 발생했습니다.\n${it.exception}"
+                                )
                             }
                         }
                 }
