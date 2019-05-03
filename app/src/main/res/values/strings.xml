@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">SungStarBook</string>
 
-    <string name="google_login_client_id">766797816298-r3rvcmd2bkgma2v32kn02cm88hbprbm7.apps.googleusercontent.com</string>
+    <string name="google_login_client_id">766797816298-r3rvcmd2bkgma2v32kn02cm88hbprbm7.apps.googleusercontent.com
+    </string>
 
     <string name="naver_login_client_id">4BbxMvXHYrTNLUk02lDH</string>
     <string name="naver_login_client_secret">s6eKAmaXhA</string>
@@ -19,5 +20,8 @@
     <string name="select_login_way">로그인 방법 선택…</string>
     <string name="title_activity_information_setting">프로필 사진/닉네임 설정</string>
     <string name="input_use_nickname">닉네임 입력</string>
-    <string name="set_profile_pic_and_name">SungStarBook에서 사용하실\n프로필 사진과 닉네임을 정해 주세요.\n밑에 사진을 눌러서\n프로필 사진을 설정하실 수 있습니다.</string>
+    <string name="set_profile_pic_and_name">SungStarBook에서 사용하실\n프로필 사진과 닉네임을 정해 주세요.\n밑에 사진을 눌러서\n프로필 사진을 설정하실 수
+        있습니다.
+    </string>
+    <string name="title_activity_error_activty">Error!!</string>
 </resources>

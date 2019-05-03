@@ -1,5 +1,6 @@
 package com.sungbin.sungstarbook.utils
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.ClipData
@@ -8,6 +9,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Environment
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import com.shashank.sony.fancytoastlib.FancyToast
@@ -16,8 +18,12 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStreamReader
+import android.telephony.TelephonyManager
+import java.util.*
 
 
+@Suppress("DEPRECATION")
+@SuppressLint("MissingPermission", "HardwareIds")
 object Utils {
 
     var sdcard = Environment.getExternalStorageDirectory().absolutePath
@@ -129,6 +135,16 @@ object Utils {
 
     fun toast(ctx: Context, txt: String, length: Int, type: Int) {
         com.shashank.sony.fancytoastlib.FancyToast.makeText(ctx, txt, length, type, false).show()
+    }
+
+    fun getDevicesUUID(ctx: Context): String {
+        val tm = ctx.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val tmDevice: String = tm.deviceId
+        val tmSerial: String = tm.simSerialNumber
+        val androidId: String = Settings.Secure.getString(ctx.contentResolver, Settings.Secure.ANDROID_ID)
+        val deviceUuid = UUID(androidId.hashCode().toLong(),
+            tmDevice.hashCode().toLong() shl 32 or tmSerial.hashCode().toLong())
+        return deviceUuid.toString()
     }
 
 }

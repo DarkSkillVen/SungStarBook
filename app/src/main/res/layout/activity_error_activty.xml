@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.InformationSetting">
+        tools:context=".view.ErrorActivty">
 
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
 
             <TextView
                     android:id="@+id/toolbar_title"
-                    android:text="@string/title_activity_information_setting"
+                    android:text="@string/title_activity_error_activty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
@@ -35,9 +35,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
-
-    <include layout="@layout/content_information_setting"/>
+    <include layout="@layout/content_error_activty"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -45,7 +43,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            android:padding="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_arrow_forward_white_24dp"/>
+            app:srcCompat="@drawable/ic_refresh_white_24dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
