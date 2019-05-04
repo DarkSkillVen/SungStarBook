@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.text.InputFilter
 import android.text.InputType
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,10 +54,12 @@ import com.shazam.android.widget.text.reflow.ReflowTextAnimatorHelper
 import com.sungbin.sungstarbook.R
 import com.sungbin.sungstarbook.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
+import org.apache.commons.lang3.StringUtils
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 
 
-@Suppress("DEPRECATION")
+@Suppress("DEPRECATION", "PrivatePropertyName")
 @SuppressLint("ValidFragment")
 class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
 
@@ -131,7 +134,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             }
 
             override fun onVerificationFailed(e: FirebaseException) {
-                Utils.error(applicationContext, "전화번호 인증에서 오류가 발생했습니다.\n$e")
+                Utils.toast(applicationContext, "인증번호 메세지를 보낼 수 없습니다." +
+                        "\n정확한 번호를 입력해 다시 시도해 주세요.", FancyToast.LENGTH_SHORT, FancyToast.WARNING)
             }
 
             override fun onCodeSent(
@@ -231,7 +235,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         Thread.setDefaultUncaughtExceptionHandler { _, throwable ->
             startActivity(Intent(applicationContext, ErrorActivty::class.java)
                 .putExtra("error", "SungStarBook에서 문제가 발생하였습니다.\n\n" +
-                        "오류 내용 : $throwable #${throwable.stackTrace[0].lineNumber}")
+                        "$throwable #${throwable.stackTrace[0].lineNumber}")
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
 
             System.exit(0)
@@ -315,7 +319,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                     } else {
                         Utils.error(
                             this,
-                            "인증번호를 통한 로그인에 실패했습니다.\n${task.exception}"
+                            "인증번호가 일치하지 않습니다. 다시 시도해 주세요."
                         )
                     }
                 }
@@ -382,7 +386,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     companion object{
         fun gotoInformationActivity(ctx: Context, uid: String){
             ctx.startActivity(Intent(ctx, InformationSetting::class.java)
-                .putExtra("uid", uid))
+                .putExtra("uid", uid).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         }
     }
 
@@ -469,27 +473,37 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
                     dialog.setView(layout)
                     dialog.setPositiveButton("확인") { _, _ ->
-                        FirebaseAuth.getInstance().signInWithEmailAndPassword(
-                            textInputEditText.text.toString(), textInputEditText2.text.toString())
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    Utils.toast(
-                                        act,
-                                        "게스트 로그인에 성공했습니다.",
-                                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
-                                    )
-                                    gotoInformationActivity(ctx, FirebaseAuth.getInstance().currentUser!!.uid)
-                                } else {
-                                    Utils.error(
-                                        act,
-                                        "게스트 로그인에 실패했습니다.\n${task.exception}"
-                                    )
+                        if(StringUtils.isBlank(textInputEditText.text.toString()) ||
+                            StringUtils.isBlank(textInputEditText2.text.toString())){
+                            Utils.toast(ctx, "모두 입력해 주세요.", FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                        }
+                        else if(!Patterns.EMAIL_ADDRESS.matcher(textInputEditText.text.toString()).matches()) {
+                            Utils.toast(ctx, "이메일 형식에 맞게 입력해 주세요.", FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                        }
+                        else if(textInputEditText2.text.toString().length < 6) {
+                            Utils.toast(ctx, "비밀번호는 최소 6글자 입니다.", FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                        }
+                        else {
+                            FirebaseAuth.getInstance().signInWithEmailAndPassword(
+                                textInputEditText.text.toString(), textInputEditText2.text.toString())
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Utils.toast(
+                                            act,
+                                            "게스트 로그인에 성공했습니다.",
+                                            FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
+                                        )
+                                        gotoInformationActivity(ctx, FirebaseAuth.getInstance().currentUser!!.uid)
+                                    } else {
+                                        Utils.error(
+                                            act,
+                                            "게스트 로그인에 실패했습니다.\n${task.exception}"
+                                        )
+                                    }
                                 }
                             }
                     }
-                    val alert = dialog.create()
-                    alert.window!!.setBackgroundDrawableResource(R.drawable.dialog_round)
-                    alert.show()
+                    dialog.show()
                 }
                 R.id.guest_login_reg -> {
                     val dialog = AlertDialog.Builder(context!!)
@@ -535,23 +549,33 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                         FirebaseAuth.getInstance().createUserWithEmailAndPassword(
                             textInputEditText.text.toString(), textInputEditText2.text.toString())
                             .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    Utils.toast(
-                                        act,
-                                        "게스트 회원가입에 성공했습니다.\n로그인을 해 주세요.",
-                                        FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
-                                    )
-                                } else {
-                                    Utils.error(
-                                        act,
-                                        "게스트 회원가입에 실패했습니다.\n${task.exception}"
-                                    )
+                                if(StringUtils.isBlank(textInputEditText.text.toString()) ||
+                                    StringUtils.isBlank(textInputEditText2.text.toString())){
+                                    Utils.toast(ctx, "모두 입력해 주세요.", FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                                }
+                                else if(!Patterns.EMAIL_ADDRESS.matcher(textInputEditText.text.toString()).matches()) {
+                                    Utils.toast(ctx, "이메일 형식에 맞게 입력해 주세요.", FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                                }
+                                else if(textInputEditText2.text.toString().length < 6) {
+                                    Utils.toast(ctx, "비밀번호는 최소 6글자 입니다.", FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                                }
+                                else {
+                                    if (task.isSuccessful) {
+                                        Utils.toast(
+                                            act,
+                                            "게스트 회원가입에 성공했습니다.\n로그인을 해 주세요.",
+                                            FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
+                                        )
+                                    } else {
+                                        Utils.error(
+                                            act,
+                                            "게스트 회원가입에 실패했습니다.\n${task.exception}"
+                                        )
+                                    }
                                 }
                             }
                     }
-                    val alert = dialog.create()
-                    alert.window!!.setBackgroundDrawableResource(R.drawable.dialog_round)
-                    alert.show()
+                    dialog.show()
                 }
                 R.id.sns_login -> {
                     val dialog = AlertDialog.Builder(context!!)
@@ -580,18 +604,29 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
                     dialog.setView(container)
                     dialog.setPositiveButton("확인") { _, _ ->
-                        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                            textInputEditText.text.toString()
-                                .replaceFirst("0", "+82"),
-                            60,
-                            TimeUnit.SECONDS,
-                            act,
-                            callBack)
-                        Utils.toast(
-                            act,
-                            "인증번호가 문자 메세지로 전송 되었습니다.\n잠시만 기다려 주세요.",
-                            FancyToast.LENGTH_SHORT,
-                            FancyToast.SUCCESS)
+                        when {
+                            StringUtils.isBlank(textInputEditText.text.toString()) ->
+                                Utils.toast(ctx, "전화번호를 입력해 주세요.", FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                            textInputEditText.text.toString().length != 11 ->
+                                Utils.toast(ctx, "전화번호는 총 11글자 입니다. 11글자에 맞춰서 입력해 주세요.",
+                                    FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                            else -> {
+                                PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                                    textInputEditText.text.toString()
+                                        .replaceFirst("0", "+82"),
+                                    60,
+                                    TimeUnit.SECONDS,
+                                    act,
+                                    callBack
+                                )
+                                Utils.toast(
+                                    act,
+                                    "인증번호가 문자 메세지로 전송 되었습니다.\n잠시만 기다려 주세요.",
+                                    FancyToast.LENGTH_SHORT,
+                                    FancyToast.SUCCESS
+                                )
+                            }
+                        }
                     }
                     dialog.show()
                 }

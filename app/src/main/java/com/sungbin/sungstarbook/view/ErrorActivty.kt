@@ -4,21 +4,19 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity;
-import com.sungbin.sungstarbook.R
+import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_error_activty.*
+
+import kotlinx.android.synthetic.main.content_error_activty.*
+import android.content.Intent
 import com.sungbin.sungstarbook.utils.Utils
 
-import kotlinx.android.synthetic.main.activity_error_activty.*
-import kotlinx.android.synthetic.main.activity_error_activty.fab
-import kotlinx.android.synthetic.main.activity_error_activty.toolbar
-import kotlinx.android.synthetic.main.activity_information_setting.*
-import kotlinx.android.synthetic.main.content_error_activty.*
 
 class ErrorActivty : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_error_activty)
+        setContentView(com.sungbin.sungstarbook.R.layout.activity_error_activty)
         toolbar.title = ""
         setSupportActionBar(toolbar)
 
@@ -32,7 +30,17 @@ class ErrorActivty : AppCompatActivity() {
 
         error_show.text = intent.getStringExtra("error")
 
-        fab.setOnClickListener {
+        send_error.setOnClickListener {
+            val email = Intent(Intent.ACTION_SEND)
+            email.type = "plain/text"
+            val address = arrayOf("sungstarbook.error@gmail.com")
+            email.putExtra(Intent.EXTRA_EMAIL, address)
+            email.putExtra(Intent.EXTRA_SUBJECT, "성별책 에러 제보")
+            email.putExtra(Intent.EXTRA_TEXT, intent.getStringExtra("error"))
+            startActivity(email)
+        }
+
+        refresh.setOnClickListener {
             Utils.restart(applicationContext)
         }
     }
