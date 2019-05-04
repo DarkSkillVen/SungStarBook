@@ -1,168 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#fff"
-        android:padding="16dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".view.MainActivity"
         tools:ignore="MissingConstraints">
 
-    <TextView
-            android:id="@+id/welcomeCenter"
-            android:paddingTop="10dp"
-            android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar_layout"
+            android:layout_alignParentTop="true"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textColor="@android:color/black"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_width="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/google_login"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible">
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
 
-        <TextView
-                android:id="@+id/welcomeTop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:visibility="invisible"
-                android:textSize="40sp"
-                tools:visibility="visible"/>
+            <TextView
+                    android:id="@+id/toolbar_title"
+                    android:text="@string/app_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="#535354"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                    android:layout_gravity="center"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
 
-    <com.karlgao.materialroundbutton.MaterialButton
-            android:id="@+id/google_login"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:visibility="invisible"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:mb_borderColor="#9e9e9e"
-            app:mb_borderWidth="2dp"
-            app:mb_buttonColor="#ffffff"
-            app:mb_buttonType="raised"
-            app:mb_cornerRadius="12dp"
-            app:mb_rippleColor="#cfcfcf"
-            app:mb_text="구글 로그인"
-            app:mb_textColor="#9e9e9e"
-            app:mb_textSize="16sp"
-            tools:visibility="visible"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
-            android:id="@+id/kakao_login_frame"
+            android:id="@+id/page"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/google_login">
+            android:background="@color/colorPrimary"
+            android:layout_below="@id/appbar_layout"
+            android:layout_above="@id/view"/>
 
-        <com.kakao.usermgmt.LoginButton
-                android:id="@+id/kakao_login_origin"
-                android:visibility="invisible"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"/>
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="56dp"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorAccent"/>
 
-        <com.karlgao.materialroundbutton.MaterialButton
-                android:id="@+id/kakao_login"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
-                android:visibility="invisible"
-                app:mb_borderColor="#9e9e9e"
-                app:mb_borderWidth="2dp"
-                app:mb_buttonColor="#ffffff"
-                app:mb_buttonType="raised"
-                app:mb_cornerRadius="12dp"
-                app:mb_rippleColor="#cfcfcf"
-                app:mb_text="카카오톡으로 로그인"
-                app:mb_textColor="#9e9e9e"
-                app:mb_textSize="16sp"
-                tools:visibility="visible" android:layout_marginTop="8dp"/>
-
-    </FrameLayout>
-
-    <FrameLayout
-            android:id="@+id/naver_login_frame"
-            app:layout_constraintTop_toBottomOf="@id/kakao_login_frame"
+    <com.iammert.library.readablebottombar.ReadableBottomBar
+            android:id="@+id/bottomBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="56dp"
+            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="true"
+            app:rbb_tabs="@xml/tabs"
+            app:rbb_textColor="@color/colorAccent"
+            app:rbb_activeItemType="text"
+            app:rbb_indicatorColor="@color/colorAccent"
+            app:rbb_indicatorHeight="1dp"/>
 
-        <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:visibility="invisible"
-                android:id="@+id/naver_login_origin"/>
-
-        <com.karlgao.materialroundbutton.MaterialButton
-                android:id="@+id/naver_login"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
-                android:visibility="invisible"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:mb_borderColor="#9e9e9e"
-                app:mb_borderWidth="2dp"
-                app:mb_buttonColor="#ffffff"
-                app:mb_buttonType="raised"
-                app:mb_cornerRadius="12dp"
-                app:mb_rippleColor="#cfcfcf"
-                app:mb_text="네이버 로그인"
-                app:mb_textColor="#9e9e9e"
-                app:mb_textSize="16sp"
-                tools:visibility="visible"/>
-
-    </FrameLayout>
-
-    <com.karlgao.materialroundbutton.MaterialButton
-            android:id="@+id/more_login"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:visibility="invisible"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:mb_borderColor="#9e9e9e"
-            app:mb_borderWidth="2dp"
-            app:mb_buttonColor="#ffffff"
-            app:mb_buttonType="raised"
-            app:mb_cornerRadius="12dp"
-            app:mb_rippleColor="#cfcfcf"
-            app:mb_text="로그인 더보기"
-            app:mb_textColor="#9e9e9e"
-            app:mb_textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@+id/naver_login_frame"
-            tools:visibility="visible"/>
-
-    <TextView
-            android:id="@+id/copyright"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:text="@string/copyright"
-            android:textColor="#9e9e9e"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:visibility="visible" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

@@ -4,15 +4,23 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.sungbin.sungstarbook.utils.Utils
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
@@ -21,23 +29,43 @@ import kotlinx.android.synthetic.main.activity_information_setting.*
 import kotlinx.android.synthetic.main.content_information_setting.*
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
+import com.kakao.usermgmt.StringSet.id
 import com.shashank.sony.fancytoastlib.FancyToast
+import com.sungbin.sungstarbook.R
+import org.apache.commons.lang3.StringUtils
 
+
+private var profileUri:Uri? = null
 
 class InformationSetting : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.sungbin.sungstarbook.R.layout.activity_information_setting)
+        setContentView(R.layout.activity_information_setting)
+
         toolbar.title = ""
         setSupportActionBar(toolbar)
 
         val uid = intent.getStringExtra("uid")
-        Utils.toast(applicationContext, uid)
+        Utils.saveData(applicationContext, "uid", uid)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "업데이트 예정...", Snackbar.LENGTH_LONG)
-                .setAction("닫기", null).show()
+        fab.setOnClickListener {
+            if(StringUtils.isBlank(input_nickname.text.toString())){
+                Utils.toast(applicationContext, "닉네임을 입력해 주세요.",
+                    FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                return@setOnClickListener
+            }
+            else {
+                val reference = FirebaseDatabase.getInstance()
+                    .reference.child("UserDB").child(uid)
+
+                val map = HashMap<String, Any>()
+                map["nickname"] = input_nickname.text.toString()
+
+                reference.updateChildren(map)
+
+                uploadProfileImage(profileUri!!, uid)
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -94,11 +122,38 @@ class InformationSetting : AppCompatActivity() {
             val result = CropImage.getActivityResult(data)
             if (resultCode == Activity.RESULT_OK) {
                 val resultUri = result.uri
+                profileUri = resultUri
                 Glide.with(this).load(resultUri).into(profile_image)
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val error = result.error
                 Utils.error(this, "프로필 사진을 선택하는 도중에 오류가 발생했습니다.\n$error")
             }
+        }
+    }
+
+    private fun uploadProfileImage(url: Uri, uid:String){
+        val pDialog = SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE)
+        pDialog.progressHelper.barColor = Color.parseColor("#A5DC86")
+        pDialog.titleText = "프로필 사진 업로드중..."
+        pDialog.setCancelable(false)
+        pDialog.show()
+
+        val storage = FirebaseStorage.getInstance()
+        val storageRef = storage.getReferenceFromUrl("gs://sungstarbook-6f4ce.appspot.com/")
+            .child("Profile_Image/$uid/Profile.png")
+        storageRef.putFile(url).addOnSuccessListener {
+            pDialog.dismissWithAnimation()
+            Utils.toast(applicationContext, "프로필 사진이 업로드 되었습니다.",
+                FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
+            startActivity(Intent(applicationContext, MainActivity::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        }.addOnFailureListener {
+            pDialog.dismissWithAnimation()
+            Utils.toast(applicationContext, "프로필 사진이 업로드중에 문제가 발생하였습니다.\n\n${it.cause}",
+                FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+        }.addOnProgressListener {
+            val progress = (100 * it.bytesTransferred) /  it.totalByteCount.toInt()
+           pDialog.titleText = "프로필 사진 업로드중... ($progress/100)"
         }
     }
 

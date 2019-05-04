@@ -13,7 +13,7 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import com.shashank.sony.fancytoastlib.FancyToast
-import com.sungbin.sungstarbook.view.MainActivity
+import com.sungbin.sungstarbook.view.LoginActivity
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
@@ -124,7 +124,7 @@ object Utils {
     }
 
     fun restart(context: Context) {
-        val mStartActivity = Intent(context, MainActivity::class.java)
+        val mStartActivity = Intent(context, LoginActivity::class.java)
         val mPendingIntentId = 123456
         val mPendingIntent =
             PendingIntent.getActivity(context, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT)

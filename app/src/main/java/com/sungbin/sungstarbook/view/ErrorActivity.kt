@@ -12,7 +12,7 @@ import android.content.Intent
 import com.sungbin.sungstarbook.utils.Utils
 
 
-class ErrorActivty : AppCompatActivity() {
+class ErrorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

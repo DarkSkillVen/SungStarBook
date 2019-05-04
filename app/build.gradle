@@ -54,12 +54,14 @@ dependencies {
     implementation 'com.github.marcoscgdev:EasyLicensesDialog:2.0.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'com.github.thomhurst:ExpandableHintText:1.0.3'
+    implementation 'com.github.iammert:ReadableBottomBar:0.2'
+    implementation 'com.github.clans:fab:1.6.4'
+    implementation 'com.github.f0ris.sweetalert:library:1.5.1'
 
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
     implementation 'com.karlgao.materialroundbutton:materialroundbutton:1.0.0'
     implementation 'com.shazam:android-reflow-animator:1.0.0-SNAPSHOT'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
-    implementation 'com.github.clans:fab:1.6.4'
 
     implementation 'org.apache.commons:commons-lang3:3.6'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
@@ -73,8 +75,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-alpha05'
     testImplementation 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    androidTestImplementation 'androidx.test:runner:1.2.0-alpha03'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha03'
+    androidTestImplementation 'androidx.test:runner:1.2.0-alpha05'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha05'
 }
 
 

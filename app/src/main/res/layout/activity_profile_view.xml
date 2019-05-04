@@ -1,42 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="RtlHardcoded"
-        tools:context=".view.ErrorActivity">
+        tools:context=".view.ProfileViewActivity"
+        tools:ignore="RtlHardcoded">
 
-    <com.google.android.material.appbar.AppBarLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
-
-        <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay">
-
-            <TextView
-                    android:id="@+id/toolbar_title"
-                    android:text="@string/title_activity_error_activty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textColor="#535354"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                    android:layout_gravity="center" />
-
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <include layout="@layout/content_error_activty" android:id="@+id/include"/>
+    <include layout="@layout/content_profile_view"/>
 
     <com.github.clans.fab.FloatingActionMenu
             xmlns:fab="http://schemas.android.com/apk/res-auto"
@@ -51,7 +22,7 @@
             fab:menu_colorPressed="@color/colorAccent"
             fab:menu_colorRipple="#99FFFFFF"
             fab:menu_animationDelayPerItem="50"
-            fab:menu_icon="@drawable/ic_add_white_24dp"
+            fab:menu_icon="@drawable/ic_edit_white_24dp"
             fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
             fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
             fab:menu_labels_padding="8dp"
@@ -68,31 +39,42 @@
             fab:menu_labels_position="left"
             fab:menu_openDirection="up"
             fab:menu_backgroundColor="@android:color/transparent"
-            fab:menu_fab_label="항목 선택"
+            fab:menu_fab_label="수정 항목 선택"
             fab:menu_fab_show_animation="@anim/fab_slide_in_from_right"
             fab:menu_fab_hide_animation="@anim/fab_slide_out_to_right">
 
         <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/send_error"
+                android:id="@+id/now_text_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_email_gray_24dp"
+                android:src="@drawable/ic_textsms_gray_24dp"
                 fab:fab_colorNormal="@color/colorPrimary"
                 fab:fab_colorPressed="@color/colorPrimary"
                 fab:fab_colorRipple="#99FFFFFF"
                 fab:fab_size="mini"
-                fab:fab_label="오류 제보" />
+                fab:fab_label="상태 메세지" />
 
         <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/refresh"
+                android:id="@+id/profile_image_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_refresh_gray_24dp"
+                android:src="@drawable/ic_face_gray_24dp"
                 fab:fab_colorNormal="@color/colorPrimary"
                 fab:fab_colorPressed="@color/colorPrimary"
                 fab:fab_colorRipple="#99FFFFFF"
                 fab:fab_size="mini"
-                fab:fab_label="앱 재시작" />
+                fab:fab_label="프로필 사진" />
+
+        <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/back_image_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_image_gray_24dp"
+                fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_colorPressed="@color/colorPrimary"
+                fab:fab_colorRipple="#99FFFFFF"
+                fab:fab_size="mini"
+                fab:fab_label="배경 사진" />
 
     </com.github.clans.fab.FloatingActionMenu>
 
