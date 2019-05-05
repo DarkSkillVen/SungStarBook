@@ -257,14 +257,14 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         })
 
         /* ----- 오류 감지 ----- */
-        Thread.setDefaultUncaughtExceptionHandler { _, throwable ->
+        /*Thread.setDefaultUncaughtExceptionHandler { _, throwable ->
             startActivity(Intent(applicationContext, ErrorActivity::class.java)
                 .putExtra("error", "SungStarBook에서 문제가 발생하였습니다.\n\n" +
                         "${throwable.message}\n\n${throwable.cause}\nAt: #${throwable.stackTrace[0].lineNumber}")
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
 
             System.exit(0)
-        }
+        }*/
         /* ---------- */
 
         /* ----- 자동 로그인 ----- */

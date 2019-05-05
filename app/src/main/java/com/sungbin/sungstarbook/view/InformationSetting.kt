@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.InputFilter
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +33,7 @@ import com.gun0912.tedpermission.TedPermission
 import com.kakao.usermgmt.StringSet.id
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.sungbin.sungstarbook.R
+import kotlinx.android.synthetic.main.content_chat.*
 import org.apache.commons.lang3.StringUtils
 
 
@@ -50,21 +52,21 @@ class InformationSetting : AppCompatActivity() {
         Utils.saveData(applicationContext, "uid", uid)
 
         fab.setOnClickListener {
-            if(StringUtils.isBlank(input_nickname.text.toString())){
-                Utils.toast(applicationContext, "닉네임을 입력해 주세요.",
-                    FancyToast.LENGTH_SHORT, FancyToast.WARNING)
-                return@setOnClickListener
-            }
-            else {
-                val reference = FirebaseDatabase.getInstance()
-                    .reference.child("UserDB").child(uid)
-
-                val map = HashMap<String, Any>()
-                map["nickname"] = input_nickname.text.toString()
-
-                reference.updateChildren(map)
-
-                uploadProfileImage(profileUri!!, uid)
+            when {
+                StringUtils.isBlank(input_nickname.text.toString()) -> {
+                    Utils.toast(applicationContext, "닉네임을 입력해 주세요.",
+                        FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                    return@setOnClickListener
+                }
+                input_nickname.text.toString().length > 13 -> {
+                    Utils.toast(applicationContext, "13글자 이하로 입력해 주세요.",
+                        FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                    return@setOnClickListener
+                }
+                else -> {
+                    Utils.saveData(applicationContext, "myName", input_nickname.text.toString())
+                    uploadProfileImage(profileUri!!, uid)
+                }
             }
         }
 

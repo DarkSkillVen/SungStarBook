@@ -65,8 +65,10 @@ dependencies {
 
     implementation 'org.apache.commons:commons-lang3:3.6'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
+    implementation 'jp.wasabeef:glide-transformations:4.0.1'
 
     implementation 'com.facebook.android:facebook-android-sdk:4.41.0'
+    implementation 'com.facebook.shimmer:shimmer:0.4.0'
 
     implementation group: 'com.kakao.sdk', name: 'usermgmt', version: project.KAKAO_SDK_VERSION
 

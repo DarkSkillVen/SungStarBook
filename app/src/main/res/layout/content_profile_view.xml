@@ -22,7 +22,7 @@
                 android:layout_height="match_parent"
                 android:transitionName="back_image"
                 android:scaleType="centerCrop"
-                android:background="@android:color/holo_blue_dark"/>
+                android:src="@color/blue_btn_bg_pressed_color"/>
 
         <TextView
                 android:layout_width="wrap_content"
@@ -131,6 +131,12 @@
 
     </LinearLayout>
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:shimmer_duration="5000">
+
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -140,6 +146,6 @@
             android:textColor="@color/colorAccent"
             android:text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."/>
 
-
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </LinearLayout>

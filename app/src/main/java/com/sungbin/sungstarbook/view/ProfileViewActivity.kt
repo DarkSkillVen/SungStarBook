@@ -13,11 +13,14 @@ import com.bumptech.glide.Glide
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import java.io.ByteArrayOutputStream
 import android.os.Build
 import androidx.core.app.ActivityOptionsCompat
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.RequestOptions.bitmapTransform
 import com.google.firebase.storage.FirebaseStorage
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
@@ -27,12 +30,14 @@ import com.sungbin.sungstarbook.utils.Utils
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import gun0912.tedbottompicker.TedBottomPicker
+import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_profile_view.*
 import kotlinx.android.synthetic.main.content_profile_view.*
 import kotlinx.android.synthetic.main.content_profile_view.profile_image
 
 
 private lateinit var uid:String
+private var profileImageUri: Uri? = null
 
 class ProfileViewActivity : AppCompatActivity() {
 
@@ -52,7 +57,9 @@ class ProfileViewActivity : AppCompatActivity() {
         val storageRefProfileImage = storage.getReferenceFromUrl("gs://sungstarbook-6f4ce.appspot.com/")
             .child("Profile_Image/$uid/Profile.png")
         storageRefProfileImage.downloadUrl.addOnSuccessListener { uri ->
-            Glide.with(applicationContext).load(uri).into(profile_image) }
+            Glide.with(applicationContext).load(uri)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(profile_image)
+            profileImageUri = uri}
         storageRefProfileImage.downloadUrl.addOnFailureListener { e ->
             Utils.toast(applicationContext!!, "프로필 사진을 불러올 수 없습니다.\n\n$e", FancyToast.LENGTH_SHORT, FancyToast.WARNING) }
 
@@ -60,8 +67,11 @@ class ProfileViewActivity : AppCompatActivity() {
             .child("Profile_Image/$uid/Back.png")
         storageRefBackImage.downloadUrl.addOnSuccessListener { uri ->
             Glide.with(applicationContext).load(uri).into(back_image) }
-        storageRefBackImage.downloadUrl.addOnFailureListener { e ->
-            Utils.toast(applicationContext!!, "배경 사진을 불러올 수 없습니다.\n\n$e", FancyToast.LENGTH_SHORT, FancyToast.WARNING) }
+        storageRefBackImage.downloadUrl.addOnFailureListener {
+            Glide.with(applicationContext).load(profileImageUri)
+                .apply(bitmapTransform(BlurTransformation(25, 3)))
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(back_image)
+             }
 
         profile_image.setOnClickListener {
             val image = profile_image.drawable

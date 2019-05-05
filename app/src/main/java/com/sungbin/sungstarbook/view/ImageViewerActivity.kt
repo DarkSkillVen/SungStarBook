@@ -10,6 +10,7 @@ import android.view.*
 import com.bumptech.glide.Glide
 import com.sungbin.sungstarbook.R
 
+
 @Suppress("DEPRECATION")
 @SuppressLint("ClickableViewAccessibility")
 class ImageViewerActivity : AppCompatActivity() {
@@ -93,4 +94,5 @@ class ImageViewerActivity : AppCompatActivity() {
             true
         })
     }
+
 }

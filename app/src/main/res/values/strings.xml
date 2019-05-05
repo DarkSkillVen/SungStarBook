@@ -32,4 +32,6 @@
     <string name="video_gallery">동영상 갤러리</string>
     <string name="title_activity_profile_view">내 프로필</string>
     <string name="now_message">상태 메세지</string>
+    <string name="title_activity_chat">채팅</string>
+    <string name="please_input_msg">메세지를 입력하세요…</string>
 </resources>

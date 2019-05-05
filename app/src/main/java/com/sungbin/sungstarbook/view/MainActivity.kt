@@ -1,5 +1,6 @@
 package com.sungbin.sungstarbook.view
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -10,6 +11,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.iammert.library.readablebottombar.ReadableBottomBar
 import com.sungbin.sungstarbook.utils.Utils
+import com.sungbin.sungstarbook.view.content_view.ChatActivity
 import com.sungbin.sungstarbook.view.main_fragment.Friends
 
 
@@ -22,7 +24,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(com.sungbin.sungstarbook.R.layout.activity_main)
 
-        toolbar.title = ""
         setSupportActionBar(toolbar)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -50,6 +51,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+
+        startActivity(Intent(applicationContext, ChatActivity::class.java)
+            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
 
     }
 
