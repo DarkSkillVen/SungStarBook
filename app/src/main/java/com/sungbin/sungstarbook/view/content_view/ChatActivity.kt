@@ -91,6 +91,7 @@ class ChatActivity : AppCompatActivity() {
         adapter = ChatAdapter(items, this)
 
         (chatView as RecyclerView).layoutManager = LinearLayoutManager(applicationContext)
+        (chatView as RecyclerView).setHasFixedSize(true)
         (chatView as RecyclerView).adapter = adapter
 
         val storage = FirebaseStorage.getInstance()
