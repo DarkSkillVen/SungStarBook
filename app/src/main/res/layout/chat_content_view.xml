@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -11,18 +12,19 @@
             android:id="@+id/leftLayout"
             android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            tools:visibility="visible">
 
         <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_alignParentStart="true"
                 android:id="@+id/profile_image_L"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:src="@drawable/profile_image_preview"
                 android:transitionName="profilePic_L"
                 android:layout_marginRight="10dp"
                 app:civ_border_width="2dp"
-                app:civ_border_color="#fff"/>
+                app:civ_border_color="@color/colorAccent"/>
 
         <TextView
                 android:layout_width="wrap_content"
@@ -52,7 +54,7 @@
                 android:layout_below="@id/name_L"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="#3F3F3F"
+                app:cardBackgroundColor="@color/colorAccent"
                 card_view:cardCornerRadius="10dp"
                 card_view:contentPadding="7dp">
 
@@ -82,8 +84,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginLeft="10dp"
                 android:transitionName="profilePic_R"

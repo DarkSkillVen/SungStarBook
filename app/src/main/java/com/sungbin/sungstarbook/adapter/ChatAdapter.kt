@@ -27,8 +27,6 @@ import java.io.ByteArrayOutputStream
 class ChatAdapter(private val list: ArrayList<ChattingItem>?, private val act:Activity) :
     RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
-    private var itemClick: ItemClick? = null
-
     inner class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var layout_L: RelativeLayout = view.findViewById(R.id.leftLayout)
         var layout_R: RelativeLayout = view.findViewById(R.id.rightLayout)
@@ -40,14 +38,6 @@ class ChatAdapter(private val list: ArrayList<ChattingItem>?, private val act:Ac
         var time_R: TextView = view.findViewById(R.id.time)
         var msg_L: TextView = view.findViewById(R.id.msg_L)
         var msg_R: TextView = view.findViewById(R.id.msg)
-    }
-
-    interface ItemClick {
-        fun onClick(view: View, position: Int)
-    }
-
-    fun setItemClick(itemClick: ItemClick) {
-        this.itemClick = itemClick
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ChatViewHolder {
@@ -119,14 +109,6 @@ class ChatAdapter(private val list: ArrayList<ChattingItem>?, private val act:Ac
             }
         }
 
-        /*viewholder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemClick != null){
-                    itemClick.onClick(v, position);
-                }
-            }
-        });*/
     }
 
     override fun getItemCount(): Int {

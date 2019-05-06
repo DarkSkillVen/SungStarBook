@@ -6,17 +6,24 @@
                 android:layout_height="match_parent"
                 tools:ignore="RtlHardcoded">
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/chatRoomList"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="10dp"
-            android:layout_above="@id/view"
-            android:divider="#ffffff"
-            android:dividerHeight="0px"
-            android:overScrollMode="never"
-            android:stackFromBottom="true"/>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/refresh">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chatRoomList"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="10dp"
+                android:layout_above="@id/view"
+                android:divider="#ffffff"
+                android:dividerHeight="0px"
+                android:overScrollMode="never"
+                android:stackFromBottom="true"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <View
             android:id="@+id/view"

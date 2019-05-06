@@ -1,6 +1,7 @@
 package com.sungbin.sungstarbook.view.main_fragment
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,15 +9,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.sungbin.sungstarbook.R
 import com.sungbin.sungstarbook.adapter.ChatRoomListAdapter
 import com.sungbin.sungstarbook.dto.ChatRoomListItem
 import com.sungbin.sungstarbook.utils.Utils
 import org.apache.commons.lang3.StringUtils
-import com.google.firebase.database.ValueEventListener
+import com.shashank.sony.fancytoastlib.FancyToast
+import java.lang.Exception
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.firebase.database.*
+
 
 private var uid:String? = null
 private var items:ArrayList<ChatRoomListItem>? = null
@@ -33,8 +35,8 @@ class Chatting : Fragment() {
         items = ArrayList()
         adapter = ChatRoomListAdapter(items, activity!!)
 
-        val myRoom = Utils.readData(context!!, "myRoom", "null")
-        val myRoomCount = StringUtils.countMatches(myRoom, "/")
+        var myRoom = Utils.readData(context!!, "myRoom", "null")
+        var myRoomCount = StringUtils.countMatches(myRoom, "/")
         val view = inflater.inflate(R.layout.fragment_chatting, null)
 
         val chatRoomListView = view.findViewById<RecyclerView>(R.id.chatRoomList)
@@ -55,9 +57,35 @@ class Chatting : Fragment() {
 
         if(myRoom != "null") {
             for (i in 1..myRoomCount) {
-                reference.child(myRoom!!.split("/")[i])
-                    .addValueEventListener(postListener)
+                try {
+                    reference.child(myRoom!!.split("/")[i])
+                        .addValueEventListener(postListener)
+                }
+                catch (e: Exception){
+                    Utils.toast(context!!, "방을 불러올 수 없습니다.", FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                }
             }
+        }
+
+        view.findViewById<SwipeRefreshLayout>(R.id.refresh).setOnRefreshListener {
+            myRoom = Utils.readData(context!!, "myRoom", "null")
+            myRoomCount = StringUtils.countMatches(myRoom, "/")
+
+            if(myRoom != "null") {
+                for (i in 1..myRoomCount) {
+                    try {
+                        reference.child(myRoom!!.split("/")[i])
+                            .addValueEventListener(postListener)
+                    }
+                    catch (e: Exception){
+                        Utils.toast(context!!, "방을 불러올 수 없습니다.", FancyToast.LENGTH_SHORT, FancyToast.WARNING)
+                    }
+                }
+            }
+
+            view.findViewById<SwipeRefreshLayout>(R.id.refresh).setColorSchemeColors(Color.parseColor("#9e9e9e"))
+            view.findViewById<SwipeRefreshLayout>(R.id.refresh).isRefreshing = false
+
         }
 
         return view

@@ -24,9 +24,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.sungbin.sungstarbook.dto.ChatRoomListItem
-import com.sungbin.sungstarbook.dto.ChattingItem
+import kotlinx.android.synthetic.main.activity_main.toolbar
 import java.text.SimpleDateFormat
 import java.util.*
+import android.animation.AnimatorListenerAdapter
+import android.animation.Animator
+import android.view.animation.TranslateAnimation
 
 
 private var fm: FragmentManager? = null
@@ -70,7 +73,46 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        addFab.setOnClickListener {
+        join_room.setOnClickListener {
+            val dialog = AlertDialog.Builder(this)
+            dialog.setTitle("채팅 방 입장")
+
+            val textInputLayout = TextInputLayout(this)
+            textInputLayout.isFocusableInTouchMode = true
+            textInputLayout.isCounterEnabled = true
+
+            val textInputEditText = TextInputEditText(this)
+            textInputEditText.filters = arrayOf(InputFilter.LengthFilter(20))
+            textInputEditText.hint = "입장할 방의 참여코드..."
+            textInputLayout.addView(textInputEditText)
+
+            val container = FrameLayout(this)
+            val params = FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+
+            params.leftMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+            params.rightMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+            params.topMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+
+            textInputLayout.layoutParams = params
+            container.addView(textInputLayout)
+
+            dialog.setView(container)
+            dialog.setPositiveButton("확인") { _, _ ->
+                val roomUid = textInputEditText.text.toString()
+                val preMyRoom = Utils.readData(applicationContext, "myRoom", "null")
+                val nowMyRoom = "$preMyRoom/$roomUid"
+                Utils.toast(applicationContext, "채팅방이 생성되었습니다." +
+                        "\n당겨서 새로고침을 해주세요.",
+                    FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
+                Utils.saveData(applicationContext, "myRoom", nowMyRoom)
+                fab.close(true)
+            }
+            dialog.show()
+        }
+
+        create_room.setOnClickListener {
             val dialog = AlertDialog.Builder(this)
             dialog.setTitle("채팅 방 생성")
 
@@ -88,9 +130,9 @@ class MainActivity : AppCompatActivity() {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
             )
 
-            params.leftMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
-            params.rightMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
-            params.topMargin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+            params.leftMargin = resources.getDimensionPixelSize(com.sungbin.sungstarbook.R.dimen.dialog_margin)
+            params.rightMargin = resources.getDimensionPixelSize(com.sungbin.sungstarbook.R.dimen.dialog_margin)
+            params.topMargin = resources.getDimensionPixelSize(com.sungbin.sungstarbook.R.dimen.dialog_margin)
 
             textInputLayout.layoutParams = params
             container.addView(textInputLayout)
@@ -108,9 +150,11 @@ class MainActivity : AppCompatActivity() {
                     roomUid
                 )
                 reference.child(roomUid).setValue(roomData)
-                Utils.toast(applicationContext, "채팅방이 생성되었습니다.",
+                Utils.toast(applicationContext, "채팅방이 생성되었습니다." +
+                        "\n당겨서 새로고침을 해주세요.",
                     FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
                 Utils.saveData(applicationContext, "myRoom", nowMyRoom)
+                fab.close(true)
             }
             dialog.show()
         }
@@ -122,17 +166,41 @@ class MainActivity : AppCompatActivity() {
                         fragmentTransaction = fm!!.beginTransaction()
                         fragmentTransaction!!.replace(R.id.page, Friends())
                         fragmentTransaction!!.commit()
-                        addFab.hide()
+
+                        if(fab.visibility == View.VISIBLE) {
+                            val animate = TranslateAnimation(0F, fab.width.toFloat(), 0F, 0F)
+                            animate.duration = 300
+                            animate.fillAfter = true
+                            fab.startAnimation(animate)
+                            fab.visibility = View.INVISIBLE
+                        }
                     }
                     1 -> {
                         fragmentTransaction = fm!!.beginTransaction()
                         fragmentTransaction!!.replace(R.id.page, Chatting())
                         fragmentTransaction!!.commit()
-                        addFab.show()
+
+                        if(fab.visibility == View.INVISIBLE) {
+                            val animate = TranslateAnimation(fab.width.toFloat(), 0F, 0F, 0F)
+                            animate.duration = 300
+                            animate.fillAfter = true
+                            fab.startAnimation(animate)
+                            fab.visibility = View.VISIBLE
+                        }
                     }
                     else -> {
                         Utils.toast(applicationContext, "개발중...")
-                        addFab.hide()
+                        fragmentTransaction = fm!!.beginTransaction()
+                        fragmentTransaction!!.replace(R.id.page, Friends())
+                        fragmentTransaction!!.commit()
+
+                        if(fab.visibility == View.VISIBLE) {
+                            val animate = TranslateAnimation(0F, fab.width.toFloat(), 0F, 0F)
+                            animate.duration = 300
+                            animate.fillAfter = true
+                            fab.startAnimation(animate)
+                            fab.visibility = View.INVISIBLE
+                        }
                     }
                 }
             }
@@ -152,10 +220,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        return buf.toString() + getTime()
+        return buf.toString() + getTimeForUid()
     }
 
     private fun getTime(): String{
+        val sdf = SimpleDateFormat("aa hh:mm")
+        return sdf.format(Date(System.currentTimeMillis()))
+    }
+
+    private fun getTimeForUid(): String{
         val sdf = SimpleDateFormat("hh:mm:ss")
         return sdf.format(Date(System.currentTimeMillis()))
     }

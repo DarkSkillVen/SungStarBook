@@ -61,6 +61,7 @@ dependencies {
     implementation 'com.karlgao.materialroundbutton:materialroundbutton:1.0.0'
     implementation 'com.shazam:android-reflow-animator:1.0.0-SNAPSHOT'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
 
     implementation 'org.apache.commons:commons-lang3:3.6'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
