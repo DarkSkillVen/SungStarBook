@@ -16,26 +16,33 @@ import com.sungbin.sungstarbook.adapter.ChatAdapter
 import com.sungbin.sungstarbook.utils.Utils
 import kotlinx.android.synthetic.main.activity_chat.*
 import android.annotation.SuppressLint
+import com.shashank.sony.fancytoastlib.FancyToast
+import org.apache.commons.lang3.StringUtils
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 @Suppress("PLUGIN_WARNING")
 @SuppressLint("SimpleDateFormat")
 class ChatActivity : AppCompatActivity() {
 
-    private val reference = FirebaseDatabase.getInstance().reference.child("ChatDB")
+    private var reference: DatabaseReference? = null
     private var items: ArrayList<ChattingItem>? = null
-    private var adapter:ChatAdapter? = null
+    private var adapter: ChatAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
+        val roomName = intent.getStringExtra("name")
+        val roomUid = intent.getStringExtra("roomUid")
+
         toolbar.title = ""
+        toolbar_title.text = roomName
         setSupportActionBar(toolbar)
+
+        reference = FirebaseDatabase.getInstance().reference.child("ChatDB").child(roomUid)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             with(window) {
@@ -50,7 +57,7 @@ class ChatActivity : AppCompatActivity() {
         var profilePicUri:String? = null
 
         items = ArrayList()
-        adapter = ChatAdapter(items, applicationContext)
+        adapter = ChatAdapter(items, this)
 
         (chatView as RecyclerView).layoutManager = LinearLayoutManager(applicationContext)
         (chatView as RecyclerView).adapter = adapter
@@ -66,31 +73,34 @@ class ChatActivity : AppCompatActivity() {
         }
 
         sendText!!.setOnClickListener {
-            val map = HashMap<String, Any>()
-
-            val key = reference.push().key
-            reference.updateChildren(map)
-
-            val root = reference.child(key!!)
-
-            val objectMap = HashMap<String, Any>()
-
-            objectMap["name"] = myName!!
-            objectMap["time"] = getTime()
-            objectMap["msg"] = inputText!!.text.toString()
-            objectMap["type"] = "txt"
-            objectMap["uid"] = uid
-            objectMap["profilePicUri"] = profilePicUri!!
-            objectMap["contentUri"] = "YEE"
-
-            root.updateChildren(objectMap)
-            inputText!!.setText("")
+            if(StringUtils.isBlank(inputText!!.text.toString())) {
+                Utils.toast(applicationContext,
+                    "내용을 입력해 주세요.",
+                    FancyToast.LENGTH_SHORT,
+                    FancyToast.WARNING)
+            }
+            else {
+                val chatData = ChattingItem(
+                    myName,
+                    getTime(),
+                    inputText!!.text.toString(),
+                    "msg",
+                    profilePicUri,
+                    "null",
+                    uid
+                )
+                reference!!.push().setValue(chatData)
+                inputText!!.setText("")
+            }
         }
 
-        reference.addChildEventListener(object : ChildEventListener {
+        reference!!.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
                 try {
-                    dataConversation(dataSnapshot)
+                    val chatData = dataSnapshot.getValue(ChattingItem::class.java)
+                    items!!.add(chatData!!)
+                    adapter!!.notifyDataSetChanged()
+                    chatView.scrollToPosition(adapter!!.itemCount - 1)
                 } catch (e: Exception) {
                     Utils.error(applicationContext, e)
                 }
@@ -113,30 +123,6 @@ class ChatActivity : AppCompatActivity() {
 
             }
         })
-    }
-
-    fun dataConversation(dataSnapshot: DataSnapshot) {
-        try {
-            val i = dataSnapshot.children.iterator()
-
-            while (i.hasNext()) {
-                val contentUri = (i.next() as DataSnapshot).value as String?
-                val msg = (i.next() as DataSnapshot).value as String?
-                val name = (i.next() as DataSnapshot).value as String?
-                val profilePicUri = (i.next() as DataSnapshot).value as String?
-                val time = (i.next() as DataSnapshot).value as String?
-                val type = (i.next() as DataSnapshot).value as String?
-                val uid = (i.next() as DataSnapshot).value as String?
-
-                val item = ChattingItem(name, time, msg, type, profilePicUri, contentUri)
-                items!!.add(item)
-                adapter!!.notifyDataSetChanged()
-                chatView.scrollToPosition(adapter!!.itemCount - 1)
-            }
-        } catch (e: Exception) {
-            Utils.error(applicationContext, e)
-        }
-
     }
 
     private fun getTime(): String{

@@ -270,6 +270,7 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         /* ----- 자동 로그인 ----- */
         val uid = Utils.readData(applicationContext, "uid", "null")
         if(!uid.equals("null")){
+            finish()
             Utils.toast(applicationContext, "자동 로그인 되었습니다.", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
             startActivity(Intent(applicationContext, MainActivity::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))

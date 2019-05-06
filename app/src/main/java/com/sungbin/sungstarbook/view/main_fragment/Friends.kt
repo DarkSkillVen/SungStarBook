@@ -3,6 +3,7 @@ package com.sungbin.sungstarbook.view.main_fragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -25,6 +26,8 @@ import com.sungbin.sungstarbook.R
 import com.sungbin.sungstarbook.utils.Utils
 import com.sungbin.sungstarbook.view.ImageViewerActivity
 import com.sungbin.sungstarbook.view.ProfileViewActivity
+import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.chat_room_list_view.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -50,11 +53,11 @@ class Friends : Fragment() {
             )
         }
 
-        view.findViewById<RoundedImageView>(R.id.my_profile_image).setOnClickListener {
-            val image =
-                drawableToBitmap((view.findViewById<RoundedImageView>(R.id.my_profile_image)).drawable)
+        view.findViewById<CircleImageView>(R.id.my_profile_image).setOnClickListener {
+            val image = view.findViewById<CircleImageView>(R.id.my_profile_image).drawable
+            val sendBitmap = (image as BitmapDrawable).bitmap
             val stream = ByteArrayOutputStream()
-            image.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            sendBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
             val byteArray = stream.toByteArray()
             val intent = Intent(context, ImageViewerActivity::class.java)
                 .putExtra("image", byteArray).putExtra("tag", "profile_image")
@@ -79,9 +82,18 @@ class Friends : Fragment() {
         val storageRef = storage.getReferenceFromUrl("gs://sungstarbook-6f4ce.appspot.com/")
             .child("Profile_Image/$uid/Profile.png")
         storageRef.downloadUrl.addOnSuccessListener { uri ->
-            Glide.with(context!!).load(uri).apply(options)
-                .into(view.findViewById<RoundedImageView>(R.id.my_profile_image))
-            //ImageDownload().execute(uri.toString())
+            try {
+                Glide.with(context!!).load(uri).apply(options)
+                    .into(view.findViewById<RoundedImageView>(R.id.my_profile_image))
+                //ImageDownload().execute(uri.toString())
+            }
+            catch (e:Exception){
+                /*Utils.toast(
+                    context!!,
+                    "프로필 사진을 불러오는 도중에 오류가 발생하였습니다.",
+                    FancyToast.LENGTH_SHORT,
+                    FancyToast.WARNING)*/
+            }
         }
         storageRef.downloadUrl.addOnFailureListener { e ->
             Utils.toast(context!!, "프로필 사진을 불러올 수 없습니다.\n\n$e", FancyToast.LENGTH_SHORT, FancyToast.WARNING)

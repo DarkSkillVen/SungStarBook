@@ -5,6 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/mainLayout"
         tools:context=".view.MainActivity"
         tools:ignore="MissingConstraints">
 
@@ -66,5 +67,16 @@
             app:rbb_activeItemType="text"
             app:rbb_indicatorColor="@color/colorAccent"
             app:rbb_indicatorHeight="1dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/view"
+            android:layout_margin="@dimen/normal_margin"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/colorAccent"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/fab_add"/>
 
 </RelativeLayout>
