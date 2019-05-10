@@ -1,4 +1,4 @@
-package com.sungbin.sungstarbook.view
+package com.sungbin.sungstarbook.view.activity
 
 import android.Manifest
 import android.annotation.SuppressLint

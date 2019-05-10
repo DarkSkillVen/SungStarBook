@@ -1,4 +1,4 @@
-package com.sungbin.sungstarbook.view
+package com.sungbin.sungstarbook.view.activity
 
 import android.graphics.Color
 import android.os.Build

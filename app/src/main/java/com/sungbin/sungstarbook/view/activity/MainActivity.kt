@@ -1,4 +1,4 @@
-package com.sungbin.sungstarbook.view
+package com.sungbin.sungstarbook.view.activity
 
 import android.graphics.Color
 import android.os.Build
@@ -27,8 +27,6 @@ import com.sungbin.sungstarbook.dto.ChatRoomListItem
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import java.text.SimpleDateFormat
 import java.util.*
-import android.animation.AnimatorListenerAdapter
-import android.animation.Animator
 import android.view.animation.TranslateAnimation
 
 

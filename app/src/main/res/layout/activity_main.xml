@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/mainLayout"
-        tools:context=".view.MainActivity"
+        tools:context=".view.activity.MainActivity"
         tools:ignore="MissingConstraints">
 
     <com.google.android.material.appbar.AppBarLayout

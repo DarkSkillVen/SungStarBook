@@ -1,4 +1,4 @@
-package com.sungbin.sungstarbook.view
+package com.sungbin.sungstarbook.view.activity
 
 import android.Manifest
 import android.animation.Animator
@@ -81,7 +81,10 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
                 val permissionlistener = object : PermissionListener {
                     override fun onPermissionGranted() {
-                        gotoInformationActivity(applicationContext, Utils.getDevicesUUID(applicationContext))
+                        gotoInformationActivity(
+                            applicationContext,
+                            Utils.getDevicesUUID(applicationContext)
+                        )
                     }
 
                     override fun onPermissionDenied(deniedPermissions: List<String>) {
@@ -135,7 +138,8 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         /* ----- 카카오톡 로그인 ----- */
         Session.getCurrentSession().addCallback(
             KakaoCallBack(
-                applicationContext)
+                applicationContext
+            )
         )
         /* ---------- */
 
@@ -207,7 +211,12 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         }
 
         more_login.setOnClickListener {
-            val bottomSheetDialog = BottomSheetDialog(this, applicationContext, snsLoginCallBack, mAuth!!)
+            val bottomSheetDialog = BottomSheetDialog(
+                this,
+                applicationContext,
+                snsLoginCallBack,
+                mAuth!!
+            )
             bottomSheetDialog.show(supportFragmentManager, "More Login")
         }
         /* ---------- */
@@ -304,7 +313,10 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                         applicationContext,
                         "구글 로그인 Firebase Auth 처리에 성공했습니다.",
                         FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
-                    gotoInformationActivity(applicationContext, FirebaseAuth.getInstance().currentUser!!.uid)
+                    gotoInformationActivity(
+                        applicationContext,
+                        FirebaseAuth.getInstance().currentUser!!.uid
+                    )
                 } else {
                     Utils.error(
                         applicationContext,
@@ -350,7 +362,10 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                             this,
                             "인증번호를 통한 로그인에 성공했습니다.",
                             FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
-                        gotoInformationActivity(applicationContext, FirebaseAuth.getInstance().currentUser!!.uid)
+                        gotoInformationActivity(
+                            applicationContext,
+                            FirebaseAuth.getInstance().currentUser!!.uid
+                        )
                     } else {
                         Utils.error(
                             this,
@@ -372,7 +387,10 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                         applicationContext,
                         "페이스북 로그인 Firebase Auth 처리에 성공했습니다.",
                         FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
-                    gotoInformationActivity(applicationContext, FirebaseAuth.getInstance().currentUser!!.uid)
+                    gotoInformationActivity(
+                        applicationContext,
+                        FirebaseAuth.getInstance().currentUser!!.uid
+                    )
                 } else {
                     Utils.error(
                         applicationContext,
@@ -408,7 +426,10 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                         ctx,
                         "카카오톡 로그인에 성공했습니다.",
                         FancyToast.LENGTH_SHORT, FancyToast.SUCCESS)
-                    gotoInformationActivity(ctx, Utils.getDevicesUUID(ctx))
+                    gotoInformationActivity(
+                        ctx,
+                        Utils.getDevicesUUID(ctx)
+                    )
                 }
             })
 
@@ -528,7 +549,10 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                                             "게스트 로그인에 성공했습니다.",
                                             FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
                                         )
-                                        gotoInformationActivity(ctx, FirebaseAuth.getInstance().currentUser!!.uid)
+                                        gotoInformationActivity(
+                                            ctx,
+                                            FirebaseAuth.getInstance().currentUser!!.uid
+                                        )
                                     } else {
                                         Utils.error(
                                             act,
@@ -674,7 +698,10 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                                     "익명 로그인에 성공했습니다.",
                                     FancyToast.LENGTH_SHORT, FancyToast.SUCCESS
                                 )
-                                gotoInformationActivity(ctx, FirebaseAuth.getInstance().currentUser!!.uid)
+                                gotoInformationActivity(
+                                    ctx,
+                                    FirebaseAuth.getInstance().currentUser!!.uid
+                                )
                             } else {
                                 Utils.error(
                                     act,

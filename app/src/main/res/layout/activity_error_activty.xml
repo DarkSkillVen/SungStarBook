@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="RtlHardcoded"
-        tools:context=".view.ErrorActivity">
+        tools:context=".view.activity.ErrorActivity">
 
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"

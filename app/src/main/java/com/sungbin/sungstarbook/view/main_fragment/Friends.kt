@@ -19,15 +19,13 @@ import com.bumptech.glide.request.RequestOptions
 import com.facebook.FacebookSdk.getApplicationContext
 import com.google.firebase.storage.FirebaseStorage
 import com.karlgao.materialroundbutton.MaterialButton
-import com.makeramen.roundedimageview.RoundedDrawable.drawableToBitmap
 import com.makeramen.roundedimageview.RoundedImageView
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.sungbin.sungstarbook.R
 import com.sungbin.sungstarbook.utils.Utils
-import com.sungbin.sungstarbook.view.ImageViewerActivity
-import com.sungbin.sungstarbook.view.ProfileViewActivity
+import com.sungbin.sungstarbook.view.activity.ImageViewerActivity
+import com.sungbin.sungstarbook.view.activity.ProfileViewActivity
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.chat_room_list_view.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream

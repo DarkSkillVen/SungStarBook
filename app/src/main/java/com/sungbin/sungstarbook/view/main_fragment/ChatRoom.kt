@@ -56,6 +56,7 @@ class Chatting : Fragment() {
         }
 
         if(myRoom != "null") {
+            items!!.clear()
             for (i in 1..myRoomCount) {
                 try {
                     reference.child(myRoom!!.split("/")[i])
@@ -68,6 +69,7 @@ class Chatting : Fragment() {
         }
 
         view.findViewById<SwipeRefreshLayout>(R.id.refresh).setOnRefreshListener {
+            items!!.clear()
             myRoom = Utils.readData(context!!, "myRoom", "null")
             myRoomCount = StringUtils.countMatches(myRoom, "/")
 

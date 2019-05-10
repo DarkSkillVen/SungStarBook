@@ -13,7 +13,7 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import com.shashank.sony.fancytoastlib.FancyToast
-import com.sungbin.sungstarbook.view.LoginActivity
+import com.sungbin.sungstarbook.view.activity.LoginActivity
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream

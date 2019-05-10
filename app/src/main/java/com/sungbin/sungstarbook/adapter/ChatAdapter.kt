@@ -1,7 +1,6 @@
 package com.sungbin.sungstarbook.adapter
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -20,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.sungbin.sungstarbook.R
 import com.sungbin.sungstarbook.utils.Utils
-import com.sungbin.sungstarbook.view.ImageViewerActivity
+import com.sungbin.sungstarbook.view.activity.ImageViewerActivity
 import java.io.ByteArrayOutputStream
 
 
@@ -113,6 +112,14 @@ class ChatAdapter(private val list: ArrayList<ChattingItem>?, private val act:Ac
 
     override fun getItemCount(): Int {
         return list?.size ?: 0
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
     }
 
     fun getItem(position: Int): ChattingItem {

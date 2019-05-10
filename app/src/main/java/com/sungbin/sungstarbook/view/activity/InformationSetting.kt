@@ -1,27 +1,19 @@
-package com.sungbin.sungstarbook.view
+package com.sungbin.sungstarbook.view.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Resources
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.text.InputFilter
 import android.view.View
-import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.sungbin.sungstarbook.utils.Utils
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
@@ -30,10 +22,8 @@ import kotlinx.android.synthetic.main.activity_information_setting.*
 import kotlinx.android.synthetic.main.content_information_setting.*
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
-import com.kakao.usermgmt.StringSet.id
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.sungbin.sungstarbook.R
-import kotlinx.android.synthetic.main.content_chat.*
 import org.apache.commons.lang3.StringUtils
 
 

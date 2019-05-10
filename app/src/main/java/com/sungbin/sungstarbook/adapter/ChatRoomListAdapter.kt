@@ -15,11 +15,9 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.makeramen.roundedimageview.RoundedImageView
 import com.sungbin.sungstarbook.R
 import com.sungbin.sungstarbook.dto.ChatRoomListItem
-import com.sungbin.sungstarbook.view.ErrorActivity
-import com.sungbin.sungstarbook.view.ImageViewerActivity
+import com.sungbin.sungstarbook.view.activity.ImageViewerActivity
 import com.sungbin.sungstarbook.view.content_view.ChatActivity
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.ByteArrayOutputStream
